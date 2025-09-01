@@ -42,7 +42,7 @@ async function updateRecipe(id, patch) {
   const updated = {
     ...items[idx],
     ...patch,
-    id: items[idx].id, // never change id
+    id: items[idx].id,
     updatedAt: new Date().toISOString(),
   };
 
@@ -51,4 +51,20 @@ async function updateRecipe(id, patch) {
   return updated;
 }
 
-module.exports = { getRecipes, getRecipeById, addRecipe, updateRecipe };
+async function deleteRecipe(id) {
+  const recipes = await readAll();
+  const toDelete = recipes.findIndex((r) => String(r.id) === String(id));
+
+  if (toDelete === -1) return false;
+  recipes.splice(toDelete, 1);
+  await writeAll(recipes);
+  return true;
+}
+
+module.exports = {
+  getRecipes,
+  getRecipeById,
+  addRecipe,
+  updateRecipe,
+  deleteRecipe,
+};

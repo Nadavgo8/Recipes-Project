@@ -87,4 +87,27 @@ async function updateRecipe(req, res, next) {
   }
 }
 
-module.exports = { getRecipes, getRecipeById, addRecipe, updateRecipe };
+
+async function deleteRecipe(req, res, next) {
+  try {
+    const deletedSuccessfuly = await recipeModel.deleteRecipe(req.params.id);
+    if (!deletedSuccessfuly) {
+      return res.status(404).json({
+        error: true,
+        message: "Unknown recipe id",
+        statusCode: 404,
+      });
+    }
+    return res.status(204).end();
+  } catch (err) {
+    return next(err);
+  }
+}
+
+module.exports = {
+  getRecipes,
+  getRecipeById,
+  addRecipe,
+  updateRecipe,
+  deleteRecipe,
+};

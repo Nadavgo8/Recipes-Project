@@ -35,44 +35,5 @@
     "difficulty": "easy",
     "id": "07a25e2b-19e6-4fbd-92bf-419ff9afaf6f",
     "date": "2025-09-01T17:10:11.194Z"
-  },
-  {
-    "title": "Perfect Pasta",
-    "description": "Quick, creamy pasta that tastes like restaurant food.",
-    "ingredients": [
-      "pasta",
-      "cream",
-      "garlic"
-    ],
-    "instructions": [
-      "Boil pasta",
-      "Make sauce",
-      "Combine"
-    ],
-    "cookingTime": 20,
-    "servings": 3,
-    "difficulty": "easy",
-    "id": "e17650ef-adeb-4417-bbd0-d91a0d125f2a",
-    "date": "2025-09-01T17:12:33.451Z"
-  },
-  {
-    "title": "Perfect food",
-    "description": "Quick, creamy pasta that tastes like restaurant food.",
-    "ingredients": [
-      "pasta",
-      "cream",
-      "garlic"
-    ],
-    "instructions": [
-      "Boil pasta",
-      "Make sauce",
-      "Combine"
-    ],
-    "cookingTime": 20,
-    "servings": 3,
-    "difficulty": "medium",
-    "id": "8ed8bb73-0c60-4ab7-950f-340be1193ba8",
-    "createdAt": "2025-09-01T18:00:21.191Z",
-    "updatedAt": "2025-09-01T18:14:48.349Z"
   }
 ]
