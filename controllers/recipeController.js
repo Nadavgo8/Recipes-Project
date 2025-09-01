@@ -1,3 +1,91 @@
+// // controllers/recipeController.js
+// const recipeModel = require("../models/recipeModel.js");
+
+// async function getRecipes(req, res, next) {
+//   try {
+//     const { difficulty, maxCookingTime, search } = req.query;
+
+//     // validate difficulty (optional)
+//     const allowed = ["easy", "medium", "hard"];
+//     let diff;
+//     if (difficulty) {
+//       diff = String(difficulty).toLowerCase().trim();
+//       if (!allowed.includes(diff)) {
+//         return res
+//           .status(400)
+//           .json({ error: "Invalid 'difficulty'. Use: easy | medium | hard" });
+//       }
+//     }
+
+//     // validate maxCookingTime (optional)
+//     let maxTime;
+//     if (maxCookingTime !== undefined) {
+//       maxTime = Number(maxCookingTime);
+//       if (!Number.isFinite(maxTime) || maxTime < 0) {
+//         return res
+//           .status(400)
+//           .json({ error: "'maxCookingTime' must be a non-negative number" });
+//       }
+//     }
+
+//     const q = (search || "").toString().trim().toLowerCase();
+
+//     // load all recipes
+//     const all = await recipeModel.getRecipes();
+
+//     // apply filters
+//     const filtered = all.filter((r) => {
+//       if (diff && String(r.difficulty).toLowerCase() !== diff) return false;
+//       if (maxTime !== undefined && Number(r.cookingTime) > maxTime)
+//         return false;
+//       if (q) {
+//         const title = (r.title || "").toLowerCase();
+//         const desc = (r.description || "").toLowerCase();
+//         if (!title.includes(q) && !desc.includes(q)) return false;
+//       }
+//       return true;
+//     });
+
+//     return res.status(200).json(filtered);
+//   } catch (err) {
+//     next(err);
+//   }
+// }
+//  async function getRecipeById(req, res, next) {
+//    try {
+//      const byId = await recipeModel.getRecipeById(req.params.id);
+//      id
+//        ? res.status(200).json(byId)
+//        : res.status(404).json({
+//            error: true,
+//            message: "Unknown recipe id",
+//            statusCode: 404,
+//          });
+//    } catch (err) {
+//      next(err);
+//    }
+//  }
+
+//  async function addRecipe(req, res) {
+//    const newRecipe = await recipeModel.addRecipe(req.body);
+//    res.status(201).json(newRecipe);
+//  }
+//  async function updateRecipe(req, res, next) {
+//    try {
+//      const byId = await recipeModel.getRecipeById(req.params.id);
+//      id
+//        ? res.status(200).json(byId)
+//        : res.status(404).json({
+//            error: true,
+//            message: "Unknown recipe id",
+//            statusCode: 404,
+//          });
+//    } catch (err) {
+//      next(err);
+//    }
+//  }
+//  module.exports = { getRecipes, getRecipeById, addRecipe };
+
 // controllers/recipeController.js
 const recipeModel = require("../models/recipeModel.js");
 
@@ -5,7 +93,6 @@ async function getRecipes(req, res, next) {
   try {
     const { difficulty, maxCookingTime, search } = req.query;
 
-    // validate difficulty (optional)
     const allowed = ["easy", "medium", "hard"];
     let diff;
     if (difficulty) {
@@ -17,7 +104,6 @@ async function getRecipes(req, res, next) {
       }
     }
 
-    // validate maxCookingTime (optional)
     let maxTime;
     if (maxCookingTime !== undefined) {
       maxTime = Number(maxCookingTime);
@@ -29,11 +115,8 @@ async function getRecipes(req, res, next) {
     }
 
     const q = (search || "").toString().trim().toLowerCase();
-
-    // load all recipes
     const all = await recipeModel.getRecipes();
 
-    // apply filters
     const filtered = all.filter((r) => {
       if (diff && String(r.difficulty).toLowerCase() !== diff) return false;
       if (maxTime !== undefined && Number(r.cookingTime) > maxTime)
@@ -51,23 +134,46 @@ async function getRecipes(req, res, next) {
     next(err);
   }
 }
- async function getRecipeById(req, res, next) {
-   try {
-     const id = await recipeModel.getRecipeById(req.params.id);
-     id
-       ? res.status(200).json(id)
-       : res.status(404).json({
-           error: true,
-           message: "Unknown recipe id",
-           statusCode: 404,
-         });
-   } catch (err) {
-     next(err);
-   }
- }
 
- async function addRecipe(req, res) {
-   const newRecipe = await recipeModel.addRecipe(req.body);
-   res.status(201).json(newRecipe);
- }
- module.exports = { getRecipes, getRecipeById, addRecipe };
+async function getRecipeById(req, res, next) {
+  try {
+    const recipe = await recipeModel.getRecipeById(req.params.id);
+    if (!recipe) {
+      return res.status(404).json({
+        error: true,
+        message: "Unknown recipe id",
+        statusCode: 404,
+      });
+    }
+    return res.status(200).json(recipe);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function addRecipe(req, res, next) {
+  try {
+    const created = await recipeModel.addRecipe(req.body);
+    return res.status(201).json(created);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function updateRecipe(req, res, next) {
+  try {
+    const updated = await recipeModel.updateRecipe(req.params.id, req.body);
+    if (!updated) {
+      return res.status(404).json({
+        error: true,
+        message: "Unknown recipe id",
+        statusCode: 404,
+      });
+    }
+    return res.status(200).json(updated);
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { getRecipes, getRecipeById, addRecipe, updateRecipe };
