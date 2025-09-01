@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const {getRecipes} = require("../controllers/recipeController")
-
+const {
+  getRecipes,
+  getRecipeById,
+} = require("../controllers/recipeController");
 
 router.get("/", getRecipes);
-// router.get("api/recipes/:id");
+router.get("/:id", getRecipeById);
 // router.post("api/recipes");
 // router.put("api/recipes/:id");
 // router.delete("api/recipes/:id");

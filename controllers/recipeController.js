@@ -51,8 +51,23 @@ async function getRecipes(req, res, next) {
     next(err);
   }
 }
-
-module.exports = { getRecipes };
+ async function getRecipeById(req, res, next) {
+   try {
+     const id = await recipeModel.getRecipeById(req.params.id);
+     id
+       ? res.status(200).json(id)
+       : res
+           .status(404)
+           .json({
+             error: true,
+             message: "Unknown recipe id",
+             statusCode: 404,
+           });
+   } catch (err) {
+     next(err);
+   }
+ }
+ module.exports = { getRecipes, getRecipeById };
 
 // async function getNotes(req, res) {
 //   const notes = await noteModel.getNotes();

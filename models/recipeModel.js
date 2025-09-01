@@ -6,11 +6,11 @@ async function getRecipes() {
   return JSON.parse(data);
 }
 
-// async function getNoteById(id) {
-//   const notes = await getNotes();
-//   const note = notes.find((note) => note.id === id);
-//   return note;
-// }
+async function getRecipeById(id) {
+  const recipes = await getRecipes();
+  const recipe = recipes.find((recipe) => recipe.id === id);
+  return recipe;
+}
 
 // async function addNote(newNote) {
 //   const notes = await getNotes();
@@ -21,4 +21,4 @@ async function getRecipes() {
 //   return newNote;
 // }
 
-module.exports = { getRecipes};
+module.exports = { getRecipes, getRecipeById };
