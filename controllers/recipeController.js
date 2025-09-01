@@ -104,10 +104,32 @@ async function deleteRecipe(req, res, next) {
   }
 }
 
+async function getRecipeStats(req, res, next) {
+  try {
+    const items = await recipeModel.getRecipes();
+
+    const total = items.length;
+    let sum = 0;
+    const byDifficulty = { easy: 0, medium: 0, hard: 0 };
+
+    for (const r of items) {
+      sum += r.cookingTime;
+      byDifficulty[r.difficulty] += 1;
+    }
+
+    const averageCookingTime = total ? +(sum / total).toFixed(2) : 0;
+
+    return res.status(200).json({ total, averageCookingTime, byDifficulty });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getRecipes,
   getRecipeById,
   addRecipe,
   updateRecipe,
   deleteRecipe,
+  getRecipeStats,
 };
