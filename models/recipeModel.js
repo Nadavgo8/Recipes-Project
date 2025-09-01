@@ -1,3 +1,4 @@
+const { randomUUID } = require("crypto");
 const fs = require("fs");
 const { nanoid } = require("nanoid");
 
@@ -12,13 +13,13 @@ async function getRecipeById(id) {
   return recipe;
 }
 
-// async function addNote(newNote) {
-//   const notes = await getNotes();
-//   newNote.id = nanoid(7);
-//   newNote.date = new Date();
-//   notes.push(newNote);
-//   await fs.promises.writeFile("./data/notes.json", JSON.stringify(notes));
-//   return newNote;
-// }
+async function addRecipe(newRecipe) {
+  const recipes = await getRecipes();
+  newRecipe.id = randomUUID();
+  newRecipe.date = new Date();
+  recipes.push(newRecipe);
+  await fs.promises.writeFile("./data/recipes.json", JSON.stringify(recipes));
+  return newRecipe;
+}
 
-module.exports = { getRecipes, getRecipeById };
+module.exports = { getRecipes, getRecipeById, addRecipe };
