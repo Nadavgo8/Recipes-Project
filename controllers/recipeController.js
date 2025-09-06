@@ -87,7 +87,6 @@ async function updateRecipe(req, res, next) {
   }
 }
 
-
 async function deleteRecipe(req, res, next) {
   try {
     const deletedSuccessfuly = await recipeModel.deleteRecipe(req.params.id);
