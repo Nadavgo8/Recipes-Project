@@ -1,10 +1,11 @@
 const express = require("express");
-// require("dotenv").config();
+require("dotenv").config();
 const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT ? process.env.PORT : 3000;
 const recipeRouter = require("./routes/recipeRouter.js")
 const morgan = require("morgan"); // ⬅ add
+const { sequelize } = require("./db/models"); // This connects to DB
 
 morgan.token("timestamp", () => new Date().toISOString());
 app.use(
@@ -22,10 +23,24 @@ app.use(express.static("public")); // opens access to public folder
 // Routes
 app.use("/api/recipes", recipeRouter);
 
-// Running the server
-app.listen(PORT, () => {
-  console.log("Server is listening on port " + PORT);
+// Test database connection
+async function testConnection() {
+  try {
+    await sequelize.authenticate();
+    console.log("✅ Database connection established successfully.");
+  } catch (error) {
+    console.error("❌ Unable to connect to database:", error);
+  }
+}
+app.listen(PORT, async () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  await testConnection();
 });
+
+// // Running the server
+// app.listen(PORT, () => {
+//   console.log("Server is listening on port " + PORT);
+// });
 
 // Home Route
 app.get("/", (req, res) => {
@@ -43,3 +58,4 @@ app.use((err, req, res, next) => {
   console.error(err);
   res.status(status).json({ error: true, message, statusCode: status });
 });
+
