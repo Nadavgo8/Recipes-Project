@@ -57,11 +57,13 @@ module.exports = (sequelize, DataTypes) => {
 
   // define associations once other models exist
   User.associate = (models) => {
-    // e.g.:
-    // User.hasMany(models.Recipe, { foreignKey: 'userId' });
-    // User.belongsToMany(models.Recipe, {
-    //   through: models.UserFavorite, foreignKey: 'userId', otherKey: 'recipeId'
-    // });
+    User.hasMany(models.Recipe, { foreignKey: "userId" });
+    User.belongsToMany(models.Recipe, {
+      through: models.UserFavorite,
+      foreignKey: "userId",
+      otherKey: "recipeId",
+      as: "favorites",
+    });
   };
 
   return User;
