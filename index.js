@@ -43,7 +43,11 @@ app.listen(PORT, async () => {
 // });
 
 // Home Route
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  const [results, metadata] = await sequelize.query(
+    "SELECT * FROM test_connection"
+  );
+  console.log(results);
   res.send("Hello Express!");
 });
 
