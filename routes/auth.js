@@ -1,14 +1,17 @@
+// routes/auth.js
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const { User } = require("../db/models");
-const auth = require("../middlewares/auth");
+const { auth } = require("../middlewares/auth");
 const router = express.Router();
 
-function signToken(userId) {
-  return jwt.sign({}, process.env.JWT_SECRET, {
-    subject: userId, // JWT "sub"
-    expiresIn: process.env.JWT_EXPIRES || "7d",
-  });
+function signToken(user) {
+  // put id (and a couple safe fields) in the payload
+  return jwt.sign(
+    { id: user.id, username: user.username, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES || "7d" }
+  );
 }
 
 // POST /api/auth/register
@@ -17,15 +20,13 @@ router.post("/register", async (req, res) => {
     const { username, email, password, firstName, lastName } = req.body;
 
     if (!username || !email || !password) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "username, email, and password are required",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "username, email, and password are required",
+      });
     }
 
-    // create -> password gets hashed by the model hook
+    // password gets hashed by the model hook
     const user = await User.create({
       username,
       email,
@@ -34,7 +35,7 @@ router.post("/register", async (req, res) => {
       lastName,
     });
 
-    const token = signToken(user.id);
+    const token = signToken(user); // <-- FIX: pass the user, not user.id
     const safeUser = {
       id: user.id,
       username: user.username,
@@ -51,7 +52,6 @@ router.post("/register", async (req, res) => {
       token,
     });
   } catch (e) {
-    // handle unique violations nicely
     if (e.name === "SequelizeUniqueConstraintError") {
       return res
         .status(409)
@@ -70,7 +70,7 @@ router.post("/login", async (req, res) => {
         .status(400)
         .json({ success: false, message: "email and password are required" });
 
-    // we need the password hash: use the scope that includes it (or unscoped)
+    // include password hash via scope
     const user = await User.scope("withPassword").findOne({ where: { email } });
     if (!user || !(await user.verifyPassword(password))) {
       return res
@@ -78,7 +78,7 @@ router.post("/login", async (req, res) => {
         .json({ success: false, message: "Invalid email or password" });
     }
 
-    const token = signToken(user.id);
+    const token = signToken(user); // <-- FIX: pass the user, not user.id
     const safeUser = {
       id: user.id,
       username: user.username,

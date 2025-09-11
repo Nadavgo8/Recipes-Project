@@ -136,6 +136,15 @@
 // controllers/recipeController.js
 const { Recipe, User } = require("../db/models");
 
+async function getMyRecipes(req, res, next) {
+  try {
+    const rows = await Recipe.findAll({ where: { userId: req.user.id } });
+    return res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function getRecipes(req, res, next) {
   try {
     const { difficulty, maxCookingTime, search } = req.query;
@@ -218,4 +227,5 @@ module.exports = {
   addRecipe,
   updateRecipe,
   deleteRecipe,
+  getMyRecipes,
 };
