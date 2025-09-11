@@ -4,6 +4,7 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT ? process.env.PORT : 3000;
 const recipeRouter = require("./routes/recipeRouter.js")
+const authRouter = require("./routes/auth");
 const morgan = require("morgan"); // ⬅ add
 const { sequelize } = require("./db/models"); // This connects to DB
 
@@ -22,6 +23,7 @@ app.use(express.static("public")); // opens access to public folder
 
 // Routes
 app.use("/api/recipes", recipeRouter);
+app.use("/api/auth", authRouter);
 
 // Test database connection
 async function testConnection() {

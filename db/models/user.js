@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         attributes: { exclude: ["password"] },
       },
       scopes: {
-        withPassword: {}, // opt-in scope if you need to read the hash
+        withPassword: { attributes: { include: ["password"] } }, // opt-in scope if you need to read the hash
       },
       hooks: {
         // hash on create/update if the value changed
@@ -68,3 +68,4 @@ module.exports = (sequelize, DataTypes) => {
 
   return User;
 };
+
