@@ -7,6 +7,8 @@ const recipeRouter = require("./routes/recipeRouter.js")
 const authRouter = require("./routes/auth");
 const morgan = require("morgan"); // ⬅ add
 const { sequelize } = require("./db/models"); // This connects to DB
+// in server setup
+app.use(express.urlencoded({ extended: true }));
 
 morgan.token("timestamp", () => new Date().toISOString());
 app.use(

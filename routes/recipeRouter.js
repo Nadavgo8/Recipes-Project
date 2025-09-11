@@ -12,7 +12,6 @@ const {
 const { recipeRules, validate } = require("../middlewares/recipeValidator");
 
 router.get("/", getRecipes);
-router.get("/stats", getRecipeStats);
 router.get("/:id", getRecipeById);
 router.post("/", recipeRules, validate, addRecipe);
 router.put("/:id", recipeRules, validate, updateRecipe);
